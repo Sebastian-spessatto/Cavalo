@@ -16,7 +16,7 @@ Uma solução é dita:
 
 Tenta os 8 movimentos possíveis sempre na mesma ordem fixa. Quando não há mais movimento válido e o tabuleiro ainda não está completo, desfaz o último passo (*backtrack*) e tenta a próxima opção. É uma solução de força bruta: garante encontrar uma solução se ela existir, mas seu desempenho depende fortemente da posição inicial e pode crescer exponencialmente no pior caso.
 
-Por conta disso, o código tem um **limite de segurança de tentativas** (`LIMITE_TENTATIVAS`, atualmente configurado em 50 bilhões). Quando esse limite é atingido antes de o tabuleiro ser completado, a execução é interrompida e reportada como **TIMEOUT** nos resultados — isso não significa que não exista solução a partir daquela posição, apenas que o backtracking não conseguiu encontrá-la dentro do limite de tentativas configurado.
+Por conta disso, o código tem um **limite de segurança de tentativas** (`LIMITE_TENTATIVAS`, atualmente configurado em 50 bilhões). Quando esse limite é atingido antes de o tabuleiro ser completado, a execução é interrompida e reportada como **TIMEOUT** nos resultados, isso não significa que não exista solução a partir daquela posição, apenas que o backtracking não conseguiu encontrá-la dentro do limite de tentativas configurado.
 
 ### 2. Heurística de Warnsdorff (menor possibilidade de movimento)
 
