@@ -46,4 +46,46 @@ Essa diferença de comportamento entre os dois algoritmos é justamente a conclu
 
 ## Equipe
 
-- (adicionar nomes dos integrantes aqui)
+- Sebastian Spessatto
+
+# Relatório de Resultados — Passeio do Cavalo
+
+## Dados coletados
+
+Foram testadas 12 posições iniciais diferentes no tabuleiro 8x8, comparando os dois algoritmos implementados: **tentativa e erro (backtracking)** e **heurística de Warnsdorff**.
+
+### Tentativa e erro (backtracking)
+
+| Métrica | Resultado |
+|---|---|
+| Tempos de execução (posições concluídas) | ~254,6 ms a ~20.749,8 ms |
+| Posições que completaram dentro do limite | 5 de 12 |
+| Posições que atingiram o limite (TIMEOUT) | 7 de 12 |
+| Tentativas de movimento (posições concluídas) | ~25,9 milhões a ~217,9 milhões |
+| Tentativas nas posições em TIMEOUT | ~50.000.000.049 (limite configurado) |
+
+### Heurística de Warnsdorff
+
+| Métrica | Resultado |
+|---|---|
+| Tempos de execução | 0,033 ms a 0,445 ms |
+| Posições concluídas | 12 de 12 |
+| Passos (casas visitadas) | 64 em todas as execuções |
+
+## Análise
+
+**1. O backtracking puro tem desempenho altamente instável.**
+Das 12 posições iniciais testadas, apenas 5 conseguiram completar o tabuleiro dentro do limite de 50 bilhões de tentativas configurado no programa. As outras 7 esgotaram todo o limite sem encontrar uma solução, o que não significa que a solução não exista a partir daquelas casas, apenas que o algoritmo, testando os movimentos sempre na mesma ordem fixa, não conseguiu encontrá-la dentro do orçamento de tentativas estabelecido.
+
+**2. Mesmo nos casos que terminam, o custo computacional varia muito.**
+Entre as posições que completaram, o tempo variou de ~255 ms até quase 21 segundos, uma diferença de quase 100x apenas trocando a casa inicial. O número de tentativas acompanha essa variação, indo de ~26 milhões até ~218 milhões de movimentos testados (incluindo os que foram desfeitos no backtrack).
+
+**3. A heurística de Warnsdorff é ordens de magnitude mais rápida e estável.**
+Todas as 12 posições foram resolvidas pela heurística em menos de meio milissegundo, com pouquíssima variação entre elas (0,033 ms a 0,445 ms). Mesmo comparando com o **melhor caso** do backtracking (~255 ms), Warnsdorff ainda é cerca de **600 a 700 vezes mais rápido**; comparando com os casos que levaram segundos, a diferença chega a ser de mais de **60.000 vezes**.
+
+**4. Conclusão prática.**
+Os números confirmam empiricamente o que se espera teoricamente: o backtracking puro tem complexidade que pode crescer exponencialmente dependendo da posição inicial, tornando-se inviável em boa parte dos casos testados dentro de um tempo razoável. Já a heurística de Warnsdorff, ao escolher sempre a casa com menos opções futuras, evita a maior parte das tentativas malsucedidas e resolve o problema em tempo praticamente constante, independente de onde o cavalo começa. Isso justifica, na prática, por que estratégias heurísticas são necessárias para tornar o Passeio do Cavalo tratável em qualquer posição do tabuleiro.
+
+## Observação sobre os TIMEOUTs
+
+Um TIMEOUT não é uma prova de que a posição não tem solução, é apenas o resultado de um limite de segurança definido no código (`LIMITE_TENTATIVAS`) para evitar que o programa rode indefinidamente. Aumentar esse limite tende a resolver mais casos, mas ao custo de tempos de execução ainda maiores, o que reforça o ponto central do trabalho: a força bruta escala mal, e a escolha da posição inicial afeta diretamente essa escala.
